@@ -1,3 +1,80 @@
+let library = {
+  nouns: [],
+  prepositions: [],
+  verbs: [],
+  adjectives: [],
+  determiners: [],
+  adverbs: [],
+  pronoun: [],
+  conjunction: [],
+  nextLine: ["\n"],
+  pause: [","],
+};
+
+let INDEX = 1;
+
+let formats = {
+  0: [
+    "determiners",
+    "nouns",
+    "prepositions",
+    "nouns",
+    "nextLine",
+    "verbs",
+    "determiners",
+    "nouns",
+    "nextLine",
+    "determiners",
+    "nouns",
+    "pause",
+    "adjectives",
+    "nouns",
+    "pause",
+    "prepositions",
+    "pronoun",
+    "nextLine",
+    "verbs",
+    "nouns",
+  ],
+  1: [
+    "determiners",
+    "adjectives",
+    "nouns",
+    "verbs",
+    "adverbs",
+    "prepositions",
+    "determiners",
+    "nouns",
+  ],
+  2: [
+    // the men of earth chase crazily the rising sun
+    "determiners",
+    "nouns",
+    "prepositions",
+    "nouns",
+    "verbs",
+    "adverbs",
+    "determiners",
+    "adjectives",
+    "nouns",
+  ],
+  3: [
+    // hapiness is a used book store,
+    // hot coffee and dusty old records
+    "nouns",
+    "verbs",
+    "determiners",
+    "adjectives",
+    "nouns",
+    "nextLine",
+    "adjectives",
+    "nouns",
+    "conjunction",
+    "adjectives",
+    "nouns",
+  ],
+};
+
 // When the button is clicked, inject setPageBackgroundColor into current page
 changeColor.addEventListener("click", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -17,43 +94,17 @@ function setPageBackgroundColor() {
 }
 
 altButton.addEventListener("click", () => {
-  // chrome.tabs
-  //   .query({ active: true, currentWindow: true })
-  //   .then((tabs) => {
-  //     new Promise((resolve, reject) => {
-  //       try {
-  //         console.log(tabs[0]);
-  //         return chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" });
-  //       } catch (e) {
-  //         reject(e);
-  //       }
-  //     });
-
-  //     //   return chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" });
-  //   })
-
-  //   .then((response) => {
-  //     console.log(response);
-  //     displayList(response.farewell);
-  //   });
-
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(
       tabs[0].id,
       { greeting: "hello" },
       async function (response) {
         altTextGroup = await response.farewell;
-        displayList(altTextGroup);
+        // displayList(altTextGroup);
+        console.log("hello");
+        processText(altTextGroup);
+        generateSentences(5, INDEX);
       }
     );
   });
 });
-
-function displayList(altTextGroup) {
-  altTextGroup.forEach((altText) => {
-    let altP = document.createElement("li");
-    altP.innerText = altText;
-    altList.appendChild(altP);
-  });
-  altList.classList.add("active");
-}

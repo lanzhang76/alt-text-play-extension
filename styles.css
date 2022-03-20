@@ -9,6 +9,16 @@ body {
   padding: 10px;
   overflow: scroll;
   height: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+#altList title {
+  background: chocolate;
+}
+
+#altList span {
+  display: flex;
 }
 
 #altList.active {
