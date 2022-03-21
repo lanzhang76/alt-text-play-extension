@@ -3,12 +3,30 @@
   <head>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="button.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <p>Hello there, I'm an alt-text experiment.</p>
-    <button id="changeColor">change bg color</button>
-    <button id="altButton">alt text?</button>
-    <div id="altList"></div>
+    <div class="header">
+      <h1 id="title">haiku(alt text)</h1>
+      <p id="intro">
+        A chrome extenstion that transforms alt text on a webpage to haikus.
+        Blah blah blah.
+      </p>
+      <p id="intro">made by Anna Garbier & Lan Zhang</p>
+    </div>
+    <div class="main">
+      <div id="altList"></div>
+      <div class="buttons">
+        <button id="generateButton">Haiku</button>
+        <button id="altButton">Alt Text</button>
+      </div>
+    </div>
+    <script src="./js/gsap.min.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
