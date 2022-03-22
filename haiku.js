@@ -19,41 +19,44 @@ function get_end_nodes(alt_txt) {
 function create_grm(end_nodes) {
     return {
         // Origins
-        "l1": ["#adjective# #noun_plural#"],
-        "l2": ["and #adjective# #noun_plural#"],
-        "l3": ["#preposition# #noun_plural#"],
+        "l1": ["#NP#"],
+        "l2": ["and #NP#"],
+        "l3": ["and #NP#"],
     
         // Nouns
-        "noun": end_nodes.noun || [],
-        "noun_plural": end_nodes.noun_plural || [],
-        "noun_singular": end_nodes.noun_singular || [],
-        "uncountable_noun":  end_nodes.uncountable_noun || [],
+        "NP": ["#AP# #N#", "#N#"],
+        "N": ["#noun#", "#noun_plural#", "#noun_singular#", "#uncountable_noun#"],
+        "noun": end_nodes.noun || ["blah"],
+        "noun_plural": end_nodes.noun_plural || ["blah"],
+        "noun_singular": end_nodes.noun_singular || ["blah"],
+        "uncountable_noun":  end_nodes.uncountable_noun || ["blah"],
     
         // Adjectives
-        "adjective": end_nodes.adjective || [],
-        "comparable_adjective": end_nodes.comparable_adjective || [],
-        "comparative_adjective": end_nodes.comparative_adjective || [],
-        "superlative_adjective": end_nodes.superlative_adjective || [],
+        "AP": [ "#adjective#", "#comparable_adjective#", "#adjective#, #adjective#"],
+        "adjective": end_nodes.adjective || ["blah"],
+        "comparable_adjective": end_nodes.comparable_adjective || ["blah"],
+        "comparative_adjective": end_nodes.comparative_adjective || ["blah"],
+        "superlative_adjective": end_nodes.superlative_adjective || ["blah"],
     
         // Adverbs
-        "adverb": end_nodes.adverb || [],
+        "adverb": end_nodes.adverb || ["blah"],
         
         // Verbs
-        "verb": end_nodes.verb || [],
-        "pasttense_verb": end_nodes.pasttense_verb || [],
-        "presenttense_verb":  end_nodes.presenttense_verb || [],
+        "verb": end_nodes.verb || ["blah"],
+        "pasttense_verb": end_nodes.pasttense_verb || ["blah"],
+        "presenttense_verb":  end_nodes.presenttense_verb || ["blah"],
     
         // Prepositions
-        "preposition": end_nodes.preposition || [],
+        "preposition": end_nodes.preposition || ["blah"],
         
         // Conjunctions
-        "conjunction": end_nodes.conjunction || [],
+        "conjunction": end_nodes.conjunction || ["blah"],
     
         // Determiners
-        "determiner": end_nodes.determiner || [],
+        "determiner": end_nodes.determiner || ["blah"],
     
         // Question words
-        "questionword": end_nodes.questionword || [],
+        "questionword": end_nodes.questionword || ["blah"],
     }
 }
 
@@ -85,7 +88,7 @@ function create_line(grm, origin, sylls, tries) {
             return `${line} (${count_line_sylls(line)})`;
         }
     }
-    return "blah ".repeat(sylls)
+    return "blah ".repeat(sylls);
 }
 
 function haiku(alt_txt) {
@@ -100,16 +103,14 @@ function haiku(alt_txt) {
     let haiku = "";
 
     // Generate the haiku, line by line
-    haiku += `${create_line(grm, "#l1#", 5, 40)}<br/>`;
-    haiku += `${create_line(grm, "#l2#", 7, 40)}<br/>`;
-    haiku += `${create_line(grm, "#l3#", 5, 40)}<br/>`;
+    haiku += `${create_line(grm, "#l1#", 5, 100)}<br/>`;
+    haiku += `${create_line(grm, "#l2#", 7, 100)}<br/>`;
+    haiku += `${create_line(grm, "#l3#", 5, 100)}<br/>`;
 
     // Write to DOM
-    const haikuDiv = document.createElement("div");
-    haikuDiv.style = "margin: 10%; line-height: 1;";
-    haikuDiv.innerHTML = haiku;
-    
-    document.body.insertAdjacentElement("beforeend", haikuDiv);
+    // const haikuDiv = document.createElement("div");
+    // haikuDiv.style = "margin: 10%; line-height: 1;";
+    altHaiku.innerHTML = haiku;
 }
 
 // setTimeout(haiku, 10);

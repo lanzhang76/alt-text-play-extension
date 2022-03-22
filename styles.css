@@ -4,6 +4,10 @@ body {
   font-size: 1em;
 }
 
+#altHaiku {
+  margin: 10px;
+}
+
 #altList {
   background: lightgrey;
   padding: 10px;
