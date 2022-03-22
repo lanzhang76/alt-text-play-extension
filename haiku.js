@@ -1,6 +1,8 @@
 // Generate a haiku using Compromise POS tagging,
 // Tracery CFG, & Regex syllable approximation
 
+const filler = "blah";
+
 function get_end_nodes(alt_txt) {
     const terms = window.nlp(alt_txt).terms().json();
     const end_nodes = {};
@@ -19,44 +21,50 @@ function get_end_nodes(alt_txt) {
 function create_grm(end_nodes) {
     return {
         // Origins
-        "l1": ["#NP#"],
-        "l2": ["and #NP#"],
-        "l3": ["and #NP#"],
+        "0-l1": ["#comparable_adjective# #N#"],
+        "0-l2": ["and #comparable_adjective# #N#"],
+        "0-l3": ["#preposition# #comparable_adjective# #N#"],
+
+        "1-l1": ["#comparable_adjective# #comparable_adjective# #noun_plural#"],
+        "1-l2": ["#VP# #preposition#"],
+        "1-l3": ["the #comparable_adjective# #noun_singular#"],
     
         // Nouns
-        "NP": ["#AP# #N#", "#N#"],
+        "NP": ["#AP# #AP# #N#", "#AP# #N#", "#N#"],
         "N": ["#noun#", "#noun_plural#", "#noun_singular#", "#uncountable_noun#"],
-        "noun": end_nodes.noun || ["blah"],
-        "noun_plural": end_nodes.noun_plural || ["blah"],
-        "noun_singular": end_nodes.noun_singular || ["blah"],
-        "uncountable_noun":  end_nodes.uncountable_noun || ["blah"],
+        "noun": end_nodes.noun || [filler],
+        "noun_plural": end_nodes.noun_plural || [filler],
+        "noun_singular": end_nodes.noun_singular || [filler],
+        "uncountable_noun":  end_nodes.uncountable_noun || [filler],
     
         // Adjectives
-        "AP": [ "#adjective#", "#comparable_adjective#", "#adjective#, #adjective#"],
-        "adjective": end_nodes.adjective || ["blah"],
-        "comparable_adjective": end_nodes.comparable_adjective || ["blah"],
-        "comparative_adjective": end_nodes.comparative_adjective || ["blah"],
-        "superlative_adjective": end_nodes.superlative_adjective || ["blah"],
-    
-        // Adverbs
-        "adverb": end_nodes.adverb || ["blah"],
-        
+        "AP": ["#adjective#", "#comparable_adjective#", "#adjective#, #adjective#"],
+        "adjective": end_nodes.adjective || [filler],
+        "comparable_adjective": end_nodes.comparable_adjective || [filler],
+        "comparative_adjective": end_nodes.comparative_adjective || [filler],
+        "superlative_adjective": end_nodes.superlative_adjective || [filler],
+            
         // Verbs
-        "verb": end_nodes.verb || ["blah"],
-        "pasttense_verb": end_nodes.pasttense_verb || ["blah"],
-        "presenttense_verb":  end_nodes.presenttense_verb || ["blah"],
-    
+        "VP": ["#adverb# #verb#", "#verb# #adverb#"],
+        "V": ["#verb#", "#pasttense_verb#", "#presenttense_verb#"],
+        "verb": end_nodes.verb || [filler],
+        "pasttense_verb": end_nodes.pasttense_verb || [filler],
+        "presenttense_verb":  end_nodes.presenttense_verb || [filler],
+
+        // Adverbs
+        "adverb": end_nodes.adverb || [filler],
+
         // Prepositions
-        "preposition": end_nodes.preposition || ["blah"],
+        "preposition": ["next to", "sitting by", "surrounded by", "hiding amongst", "alongside", "below", "beside", "entangled with", "by", "nestled between"],
         
         // Conjunctions
-        "conjunction": end_nodes.conjunction || ["blah"],
+        "conjunction": end_nodes.conjunction || [filler],
     
         // Determiners
-        "determiner": end_nodes.determiner || ["blah"],
+        "determiner": end_nodes.determiner || [filler],
     
         // Question words
-        "questionword": end_nodes.questionword || ["blah"],
+        "questionword": end_nodes.questionword || [filler],
     }
 }
 
@@ -75,23 +83,25 @@ function count_word_sylls(word) {
     word = word.toLowerCase();
     if (word.length <= 3) { return 1; }
     word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
-    return word.match(/[aeiouy]{1,2}/g).length;
+    const match = word.match(/[aeiouy]{1,2}/g);
+    return match ? match.length : 0;
 }
 
 function create_line(grm, origin, sylls, tries) {
     const generator = tracery.createGrammar(grm);
-    console.log(generator);
     let line = "";
     for (let i = 0; i < tries; i += 1) {
         line = generator.flatten(origin);
         if (count_line_sylls(line) === sylls) {
-            return `${line} (${count_line_sylls(line)})`;
+            return line;
         }
     }
     return "blah ".repeat(sylls);
 }
 
-function haiku(alt_txt) {
+function haiku(alt) {
+    alt_txt = alt.replaceAll("|", "")
+
     // Get end nodes from alt text
     const end_nodes = get_end_nodes(alt_txt);
     console.log(end_nodes);
@@ -103,9 +113,14 @@ function haiku(alt_txt) {
     let haiku = "";
 
     // Generate the haiku, line by line
-    haiku += `${create_line(grm, "#l1#", 5, 100)}<br/>`;
-    haiku += `${create_line(grm, "#l2#", 7, 100)}<br/>`;
-    haiku += `${create_line(grm, "#l3#", 5, 100)}<br/>`;
+    haiku += `${create_line(grm, "#0-l1#", 5, 500)}<br/>`;
+    haiku += `${create_line(grm, "#0-l2#", 7, 500)}<br/>`;
+    haiku += `${create_line(grm, "#0-l3#", 5, 500)}<br/><br/>`;
+
+    // Generate the haiku, line by line
+    haiku += `${create_line(grm, "#1-l1#", 5, 500)}<br/>`;
+    haiku += `${create_line(grm, "#1-l2#", 7, 500)}<br/>`;
+    haiku += `${create_line(grm, "#1-l3#", 5, 500)}<br/>`;
 
     // Write to DOM
     // const haikuDiv = document.createElement("div");
