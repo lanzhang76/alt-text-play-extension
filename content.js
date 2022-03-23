@@ -10,10 +10,19 @@ async function getAltTags() {
   var imgGroup = [];
   console.log(imgElms);
   imgElms.forEach((el) => {
-    console.log(el.alt != null);
-    if (el.alt.length > 0) imgGroup.push(el.attributes.alt.value);
+    if (el.alt.length > 0 && el.attributes.src != null) {
+      console.log(el.attributes.src);
+      let item = {
+        alt: el.attributes.alt.value,
+        src:
+          el.attributes.src.value[0] == "/"
+            ? `${window.location.origin}${el.attributes.src.value}`
+            : el.attributes.src.value,
+      };
+      imgGroup.push(item);
+    }
   });
-
+  console.log(imgGroup);
   return imgGroup;
 }
 

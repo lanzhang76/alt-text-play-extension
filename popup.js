@@ -7,7 +7,36 @@ altButton.addEventListener("click", () => {
       { greeting: "hello" },
       async function (response) {
         altTextGroup = await response.farewell;
-        displayList(altTextGroup);
+        let alt = [];
+        console.log(altTextGroup);
+        altTextGroup.forEach((altGroup) => {
+          alt.push(altGroup.alt);
+        });
+        displayList(alt);
+      }
+    );
+  });
+});
+
+rawButton.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      { greeting: "hello" },
+      async function (response) {
+        altTextGroup = await response.farewell;
+
+        altList.classList.remove("haiku");
+        altList.innerHTML = "";
+        altTextGroup.forEach((altText) => {
+          let altP = document.createElement("span");
+          let srcP = document.createElement("span");
+
+          altP.innerText = `{alt:"${altText.alt.replace(/\.$/g, "")}",`;
+          srcP.innerText = `src:"${altText.src}"},`;
+          altList.appendChild(altP);
+          altList.appendChild(srcP);
+        });
       }
     );
   });
@@ -19,8 +48,9 @@ generateButton.addEventListener("click", () => {
       tabs[0].id,
       { greeting: "hello" },
       async function (response) {
-        altTextGroup = await response.farewell;
-        makeHaiku(altTextGroup);
+        item = await response.farewell;
+        console.log(item);
+        // makeHaiku(altTextGroup);
       }
     );
   });
