@@ -32,7 +32,7 @@ rawButton.addEventListener("click", () => {
           let altP = document.createElement("span");
           let srcP = document.createElement("span");
 
-          altP.innerText = `{alt:"${altText.alt.replace(/\.$/g, "")}",`;
+          altP.innerText = `{alt:"${altText.alt.replace(/[^a-zA-Z]+$/g, "")}",`;
           srcP.innerText = `src:"${altText.src}"},`;
           altList.appendChild(altP);
           altList.appendChild(srcP);
@@ -61,7 +61,7 @@ function displayList(altTextGroup) {
   altList.innerHTML = "";
   altTextGroup.forEach((altText) => {
     let altP = document.createElement("li");
-    altP.innerText = altText;
+    altP.innerText = altText.replace(/[^a-zA-Z]+$/g, "");
     altList.appendChild(altP);
   });
 }
