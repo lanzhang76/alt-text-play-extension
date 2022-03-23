@@ -1,42 +1,48 @@
-// When the button is clicked, inject setPageBackgroundColor into current page
-changeColor.addEventListener("click", async () => {
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+gsap.fromTo(["#title", "#intro"], 1, { opacity: 0 }, { opacity: 1 });
 
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    function: setPageBackgroundColor,
+altButton.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      { greeting: "hello" },
+      async function (response) {
+        altTextGroup = await response.farewell;
+        let alt = [];
+        // console.log(altTextGroup);
+        altTextGroup.forEach((altGroup) => {
+          alt.push(altGroup.alt);
+        });
+        displayList(alt);
+      }
+    );
   });
 });
 
-// The body of this function will be executed as a content script inside the
-// current page
-function setPageBackgroundColor() {
-  chrome.storage.sync.get("color", ({ color }) => {
-    document.body.style.backgroundColor = color;
+rawButton.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      { greeting: "hello" },
+      async function (response) {
+        altTextGroup = await response.farewell;
+
+        altList.classList.remove("haiku");
+        altList.innerHTML = "";
+        altTextGroup.forEach((altText) => {
+          let altP = document.createElement("span");
+          let srcP = document.createElement("span");
+
+          altP.innerText = `{alt:"${altText.alt.replace(/\.$/g, "")}",`;
+          srcP.innerText = `src:"${altText.src}"},`;
+          altList.appendChild(altP);
+          altList.appendChild(srcP);
+        });
+      }
+    );
   });
-}
+});
 
-altButton.addEventListener("click", () => {
-  // chrome.tabs
-  //   .query({ active: true, currentWindow: true })
-  //   .then((tabs) => {
-  //     new Promise((resolve, reject) => {
-  //       try {
-  //         console.log(tabs[0]);
-  //         return chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" });
-  //       } catch (e) {
-  //         reject(e);
-  //       }
-  //     });
-
-  //     //   return chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" });
-  //   })
-
-  //   .then((response) => {
-  //     console.log(response);
-  //     displayList(response.farewell);
-  //   });
-
+generateButton.addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(
       tabs[0].id,
@@ -51,10 +57,20 @@ altButton.addEventListener("click", () => {
 });
 
 function displayList(altTextGroup) {
+  altList.classList.remove("haiku");
+  altList.innerHTML = "";
   altTextGroup.forEach((altText) => {
     let altP = document.createElement("li");
     altP.innerText = altText;
     altList.appendChild(altP);
   });
-  altList.classList.add("active");
+}
+
+function makeHaiku(altTextGroup) {
+  altList.classList.add("haiku");
+  altList.innerHTML = "";
+
+  let altP = document.createElement("p");
+  altP.innerText = "Hello Hello \n Hello Hello Hello \n Hello Hello";
+  altList.appendChild(altP);
 }
