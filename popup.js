@@ -49,7 +49,6 @@ generateButton.addEventListener("click", () => {
       { greeting: "hello" },
       async function (response) {
         altTextGroup = await response.farewell;
-        displayList(altTextGroup);
         haiku(altTextGroup.join(" "));
       }
     );
