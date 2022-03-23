@@ -1,5 +1,3 @@
-gsap.fromTo(["#title", "#intro"], 1, { opacity: 0 }, { opacity: 1 });
-
 altButton.addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(

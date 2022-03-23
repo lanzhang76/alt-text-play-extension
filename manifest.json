@@ -1,6 +1,6 @@
 {
-  "name": "Alt Text Play Tool",
-  "description": "Hi there, let's play with alt text!",
+  "name": "Today, I saw",
+  "description": "a tool that looks for alt text of images on the internet",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
@@ -13,7 +13,6 @@
     }
   ],
   "permissions": ["storage", "activeTab", "scripting"],
-  "options_page": "options.html",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
