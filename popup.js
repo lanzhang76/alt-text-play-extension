@@ -44,6 +44,7 @@ altButton.addEventListener("click", () => {
       async function (response) {
         altTextGroup = await response.farewell;
         displayList(altTextGroup);
+        haiku(altTextGroup.join(" "));
       }
     );
   });
