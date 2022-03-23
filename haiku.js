@@ -12,7 +12,9 @@ function get_end_nodes(alt_txt) {
         if (!(pos in end_nodes)) {
             end_nodes[pos] = []
         }
-        end_nodes[pos].push(text);
+        if (!(end_nodes[pos].includes(text))) {
+            end_nodes[pos].push(text);
+        }
     })
     return end_nodes;
 }
@@ -22,23 +24,22 @@ function create_grm(end_nodes) {
     return {
         // Origins
         "0-l1": ["#comparable_adjective# #N#"],
-        "0-l2": ["and #comparable_adjective# #N#"],
+        "0-l2": ["and #comparable_adjective# #comparable_adjective# #N#"],
         "0-l3": ["#preposition# #comparable_adjective# #N#"],
-
-        "1-l1": ["#comparable_adjective# #comparable_adjective# #noun_plural#"],
-        "1-l2": ["#VP# #preposition#"],
-        "1-l3": ["the #comparable_adjective# #noun_singular#"],
     
         // Nouns
-        "NP": ["#AP# #AP# #N#", "#AP# #N#", "#N#"],
-        "N": ["#noun#", "#noun_plural#", "#noun_singular#", "#uncountable_noun#"],
+        "NP": ["#AP# #N#", "#N#"],
+        "N": ["#noun#", "#noun_plural#", "#noun_singular#", "#noun_propernoun_singular#", "#uncountable_noun#"],
         "noun": end_nodes.noun || [filler],
         "noun_plural": end_nodes.noun_plural || [filler],
         "noun_singular": end_nodes.noun_singular || [filler],
         "uncountable_noun":  end_nodes.uncountable_noun || [filler],
+        "noun_propernoun_plural": end_nodes.noun_propernoun_singular || [filler],
+        "noun_propernoun_singular":  end_nodes.noun_propernoun_singular || [filler],
     
         // Adjectives
-        "AP": ["#adjective#", "#comparable_adjective#", "#adjective#, #adjective#"],
+        "AP": ["#A#", "#A# and #A#", "#A#, #A#, and #A#"],
+        "A": ["#adjective#", "#comparable_adjective#", "#adjective#, #adjective#"],
         "adjective": end_nodes.adjective || [filler],
         "comparable_adjective": end_nodes.comparable_adjective || [filler],
         "comparative_adjective": end_nodes.comparative_adjective || [filler],
@@ -115,12 +116,7 @@ function haiku(alt) {
     // Generate the haiku, line by line
     haiku += `${create_line(grm, "#0-l1#", 5, 500)}<br/>`;
     haiku += `${create_line(grm, "#0-l2#", 7, 500)}<br/>`;
-    haiku += `${create_line(grm, "#0-l3#", 5, 500)}<br/><br/>`;
-
-    // Generate the haiku, line by line
-    haiku += `${create_line(grm, "#1-l1#", 5, 500)}<br/>`;
-    haiku += `${create_line(grm, "#1-l2#", 7, 500)}<br/>`;
-    haiku += `${create_line(grm, "#1-l3#", 5, 500)}<br/>`;
+    haiku += `${create_line(grm, "#0-l3#", 5, 500)}<br/>`;
 
     // Write to DOM
     // const haikuDiv = document.createElement("div");
