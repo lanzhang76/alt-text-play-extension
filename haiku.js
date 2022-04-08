@@ -124,7 +124,7 @@ function haiku(alt) {
 
   // Get end nodes from alt text
   const end_nodes = get_end_nodes(alt_txt);
-  console.log(end_nodes);
+  // console.log(end_nodes);
 
   // Create the grammar
   const grm = create_grm(end_nodes);

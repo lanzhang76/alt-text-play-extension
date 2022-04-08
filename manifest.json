@@ -12,6 +12,9 @@
       "js": ["content.js"]
     }
   ],
+  "externally_connectable": {
+    "matches": ["*://*.example.com/*", "*://*.metmuseum.org/*"]
+  },
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
     "default_popup": "popup.html",

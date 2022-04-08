@@ -47,7 +47,12 @@ generateButton.addEventListener("click", () => {
       { greeting: "hello" },
       async function (response) {
         altTextGroup = await response.farewell;
-        haiku(altTextGroup.join(" "));
+        let altTextArr = [];
+        altTextGroup.forEach((altText) => {
+          // console.log(altText.alt);
+          altTextArr.push(altText.alt.toLowerCase());
+        });
+        haiku(altTextArr.join(" "));
       }
     );
   });
